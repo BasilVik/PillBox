@@ -1,4 +1,4 @@
-from telegram import ForceReply, Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -12,15 +12,24 @@ from config import TELEGRAM_TOKEN
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    message_text = (f'Привет, {user.name}! Я бот PillBox'
-                    f'Я помогу составить расписание приёма лекарств,'
-                    f'а также напомню о приёме в нужное время.')
-    await update.message.reply_text(message_text)
+    message_text = (f'Привет, {user.name}! Я бот PillBox '
+                    f'Я помогу составить расписание приёма лекарств, '
+                    f'а также напомню о приёме в нужное время. '
+                    f'Чтобы продолжить, нажми на кнопку ниже.')
+    # await update.message.reply_text(message_text)
+    keyboard = [
+        [
+            InlineKeyboardButton("Option 1", callback_data="1"),
+            InlineKeyboardButton("Option 2", callback_data="2"),
+        ],
+        [InlineKeyboardButton("Option 3", callback_data="3")],
+    ]
 
-    await update.message.reply_html(
-        rf"Hi {user.mention_html()}!",
-        reply_markup=ForceReply(selective=True),
-    )
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        message_text,
+        reply_markup=reply_markup)
 
 
 async def help_command(
